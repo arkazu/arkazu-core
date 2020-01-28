@@ -125,7 +125,7 @@ def gaskuy3():
 
         messagebox.showinfo("Perhatian!!", "Steganografi dan hash berhasil!!")
 def bantuan():
-    messagebox.showinfo("About Us", "Selamat datang di STEGHASH\n\nDeveloped By:\n- M. Subkhan A\n- Berry Karo-Karo\n- Catur Adi Nugroho\n- M. Aldi Rachman\n- Tanto Nur Atmojo\n\nPertanyaan:\nHubungi : IIIrks.red.@stsn-nci.ac.id \n\n\n©copyright IIIRKSRED19/20 KELOMPOK 3")
+    messagebox.showinfo("About Us", "Selamat datang di STEGHASH\n\nDeveloped By:\n- M. Subkhan A\n- Berry Karo-Karo\n- Catur Adi Nugroho\n- M. Aldi Rachman\n- Tanto Nur Atmojo\n\n")
 def lagi():
     gambar.delete(0, END)
     pesan.delete(0, END)
