@@ -1,0 +1,100 @@
+﻿SCRIPT KONFIGURASI
+
+    A) Instalasi NAT Network
+       #VBoxManage natnetwork add -t nat-int-network –n "192.168.100.0/24" -e
+       Atur IP Static dan pastikan terhubung
+       
+    B) Elasticsearch
+       $sudo apt update
+       $sudo apt upgrade
+       $java -version →Pastikan versi 8
+       $wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+       $echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+       $sudo apt update
+       $sudo apt install elasticsearch
+       $sudo nano /etc/elasticsearch/elasticsearch.yml 
+       =======================================================
+       uncomments pada network.host dan pada http.port 
+       isi network.host dengan localhost dan http.port 9200
+       =======================================================
+       $sudo systemctl restart elasticsearch
+       $sudo systemctl status elasticsearch
+       $curl -X GET “localhost:9200”  → Pastikan tidak ada error
+       
+    C) Logstash
+       $sudo apt install logstash
+       $sudo ln -s /usr/share/logstash/bin/logstash /bin/logstash
+       $sudo chmod +x /bin/logstash
+       $cd /etc/logstash/conf.d
+       =======================================================
+       Gunakan file konfigurasi yang telah disiapkan dan sesuaikan dengan kondisi. Setelah itu, simpan pada direktori ini
+       =======================================================
+       $systemctl restart logstash
+       $systemctl status logstash → pastikan aktif
+       $sudo logstash -f wifi-parsing.conf
+       
+    D) Kibana
+       $sudo apt install kibana
+       $sudo nano /etc/kibana/kibana.yml
+       =========================================================
+       Uncomment pada server.port dan server.host
+       Ganti alamat server.host dengan alamat IP
+       save dan exit
+       =========================================================
+       $systemctl restart kibana
+       $systemctl status kibana → pastikan aktif
+       
+    E) Ngin-x
+       $sudo apt install nginx
+       
+    F) Aircrack-ng
+       $wget https://download.aircrack-ng.org/aircrack-ng-1.6.tar.gz
+       $ tar -zxvf aircrack-ng-1.6.tar.gz
+       $cd aircrack-ng-1.6
+       $sudo apt install libtool
+       $sudo apt-get -y install libssl-dev libnl-3-dev libnl-genl-3-dev ethtool
+       $sudo apt-get update && sudo apt-get install libssl0.9.8 libssl-dev   build-essential autoconf automake libtool   pkg-config libnl-3-dev libnl-genl-3-dev   libssl-dev libsqlite3-dev libpcre3-dev ethtool shtool rfkill zlib1g-dev libpcap-dev screen
+       $autoreconf -i
+       $sudo ./configure --enable-shared –with-experimental
+       $sudo make -j 4
+       $sudo make install
+       $sudo ldconfig
+       
+    G) Tshark
+       $sudo apt install tshark
+       
+    H) Filebeat
+       $sudo apt update
+       $sudo apt upgrade
+       $wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+       $echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+       $sudo apt update
+       $sudo apt install filebeat
+       $sudo nano /etc/filebeat/filebeat.yml
+       ======================================================
+       Ubah “Enabled : False” jad “Enabled : True”
+       Atur path pada input file
+       Comment pada elasticsearch
+       Comment pada kibana
+       Uncomment pada “output.logstash”
+       Uncomment pada hosts, dan atur IP dan port ke IP dan port server
+       save dan exit
+       =======================================================
+       $systemctl restart filebeat
+       $systemctl status filebeat → pastikan aktif
+       =======================================================
+       Gunakan script tshark yang sudah disiapkan dan ubah menjadi file bernama wifi.sh
+       =======================================================
+       $sudo sh wifi.sh
+       =======================================================
+       Pastikan logstash sudah siap terlebih dahulu sebelum menggunakan perintah ini
+       Tiap data yang tertangkap akan langsung masuk ke logstash
+
+
+NOTE :
+Konfigurasi B, C, D, E digunakan untuk server
+Konfigurasi F, G, H digunakan untuk client atau wifi sensor
+PENTING : 
+- konfigurasi USB di Vbox USB 3.0
+- Chipset Ralink RT2870 install $sudo apt-get install firmware-ralink
+
